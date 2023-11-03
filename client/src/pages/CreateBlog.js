@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
+import { Box, Button, InputLabel, TextField, Typography, Chip } from "@mui/material";
 import toast from "react-hot-toast";
+
 const CreateBlog = () => {
   const id = localStorage.getItem("userId");
   const navigate = useNavigate();
@@ -11,6 +12,8 @@ const CreateBlog = () => {
     description: "",
     image: "",
   });
+  const [tags, setTags] = useState([]); // Add a state for tags
+
   // input change
   const handleChange = (e) => {
     setInputs((prevState) => ({
@@ -18,7 +21,15 @@ const CreateBlog = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  //form
+
+  // Handle tag input change
+  const handleTagChange = (e) => {
+    // Split input by comma to create an array of tags
+    const tagArray = e.target.value.split(",");
+    setTags(tagArray);
+  };
+
+  // Form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -27,6 +38,7 @@ const CreateBlog = () => {
         description: inputs.description,
         image: inputs.image,
         user: id,
+        tags: tags, // Include tags in the request
       });
       if (data?.success) {
         toast.success("Blog Created");
@@ -36,8 +48,9 @@ const CreateBlog = () => {
       console.log(error);
     }
   };
+
   return (
-    <>
+    <div>
       <form onSubmit={handleSubmit}>
         <Box
           width={"50%"}
@@ -98,12 +111,41 @@ const CreateBlog = () => {
             variant="outlined"
             required
           />
+          <InputLabel
+            sx={{ mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" }}
+          >
+            Tags (comma-separated)
+          </InputLabel>
+          <TextField
+            value={tags.join(",")} // Join tags into a comma-separated string
+            onChange={handleTagChange}
+            margin="normal"
+            variant="outlined"
+          />
+          {tags.length > 0 && (
+            <div>
+              <Typography variant="body2" color="text.secondary">
+                Tags:
+              </Typography>
+              <div>
+                {tags.map((tag, index) => (
+                  <Chip
+                    key={index}
+                    label={tag}
+                    color="primary"
+                    variant="outlined"
+                    style={{ marginRight: "4px", marginBottom: "4px" }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
           <Button type="submit" color="primary" variant="contained">
             SUBMIT
           </Button>
         </Box>
       </form>
-    </>
+    </div>
   );
 };
 

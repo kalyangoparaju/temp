@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { red } from "@mui/material/colors";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { Box, IconButton } from "@mui/material";
+import { Box, IconButton, Chip } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -21,6 +21,7 @@ export default function BlogCard({
   time,
   id,
   isUser,
+  tags, // Assuming tags is an array of strings
 }) {
   const navigate = useNavigate();
   const handleEdit = () => {
@@ -37,7 +38,8 @@ export default function BlogCard({
     } catch (error) {
       console.log(error);
     }
-  };
+  }
+
   return (
     <Card
       sx={{
@@ -78,6 +80,24 @@ export default function BlogCard({
         <Typography variant="body2" color="text.secondary">
           Description : {description}
         </Typography>
+        {tags && tags.length > 0 && (
+          <div>
+            <Typography variant="body2" color="text.secondary">
+              Tags:
+            </Typography>
+            <div>
+              {tags.map((tag, index) => (
+                <Chip
+                  key={index}
+                  label={tag}
+                  color="primary"
+                  variant="outlined"
+                  style={{ marginRight: "4px", marginBottom: "4px" }}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

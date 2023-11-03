@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import BlogCard from "../components/BlogCard";
+
 const UserBlogs = () => {
   const [blogs, setBlogs] = useState([]);
 
-  //get user blogs
+  // Get user blogs
   const getUserBlogs = async () => {
     try {
       const id = localStorage.getItem("userId");
@@ -20,12 +21,16 @@ const UserBlogs = () => {
   useEffect(() => {
     getUserBlogs();
   }, []);
+
+
   console.log(blogs);
+
   return (
     <div>
       {blogs && blogs.length > 0 ? (
         blogs.map((blog) => (
           <BlogCard
+            key={blog._id}
             id={blog._id}
             isUser={true}
             title={blog.title}
@@ -33,10 +38,11 @@ const UserBlogs = () => {
             image={blog.image}
             username={blog.user.username}
             time={blog.createdAt}
+            tags={blog.tags} // Pass tags as a prop
           />
         ))
       ) : (
-        <h1>You Havent Created a blog</h1>
+        <h1>You Haven't Created a Blog</h1>
       )}
     </div>
   );

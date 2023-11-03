@@ -1,38 +1,37 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const colors = require("colors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
-//env config
+// Load environment variables
 dotenv.config();
 
-//router import
-const userRoutes = require("./routes/userRoutes");
-const blogRoutes = require("./routes/blogRoutes");
-
-//mongodb connection
+// MongoDB connection
 connectDB();
 
-//rest objecct
+// Create an Express app
 const app = express();
 
-//middelwares
-app.use(cors());
+// Middleware
+const corsOptions = {
+  origin: "http://localhost:3000",
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(morgan("dev"));
 
-//routes
+// Routes
+const userRoutes = require("./routes/userRoutes");
+const blogRoutes = require("./routes/blogRoutes");
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/blog", blogRoutes);
 
-// Port
+// Define the port to listen on
 const PORT = process.env.PORT || 8080;
-//listen
+
+// Start the server
 app.listen(PORT, () => {
-  console.log(
-    `Server Running on ${process.env.DEV_MODE} mode port no ${PORT}`.bgCyan
-      .white
-  );
+  console.log(`Server is running on port ${PORT} in ${process.env.DEV_MODE} mode`);
 });

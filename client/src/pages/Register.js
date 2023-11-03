@@ -24,6 +24,8 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      console.log("in try register");
+      
       const { data } = await axios.post("/api/v1/user/register", {
         username: inputs.name,
         email: inputs.email,
@@ -34,6 +36,8 @@ const Register = () => {
         navigate("/login");
       }
     } catch (error) {
+      console.log("in handlesubmit register page");
+      
       console.log(error);
     }
   };

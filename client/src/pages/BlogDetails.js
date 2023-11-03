@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react"; // Import useState and useEffect
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Button, InputLabel, TextField, Typography } from "@mui/material";
+import { Box, Button, InputLabel, TextField, Typography, Chip } from "@mui/material";
+
 const BlogDetails = () => {
   const [blog, setBlog] = useState({});
   const id = useParams().id;
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({});
+  const [tags, setTags] = useState([]); // Add a state for tags
+
   // get blog details
   const getBlogDetail = async () => {
     try {
@@ -19,11 +22,12 @@ const BlogDetails = () => {
           description: data?.blog.description,
           image: data?.blog.image,
         });
+        setTags(data?.blog.tags); // Set the tags from the API response
       }
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   useEffect(() => {
     getBlogDetail();
@@ -36,7 +40,8 @@ const BlogDetails = () => {
       [e.target.name]: e.target.value,
     }));
   };
-  //form
+
+  // form
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -44,7 +49,7 @@ const BlogDetails = () => {
         title: inputs.title,
         description: inputs.description,
         image: inputs.image,
-        user: id,
+        tags: tags, // Include tags in the update
       });
       if (data?.success) {
         toast.success("Blog Updated");
@@ -54,9 +59,9 @@ const BlogDetails = () => {
       console.log(error);
     }
   };
-  console.log(blog);
+
   return (
-    <v>
+    <div> {/* Wrap the content in a valid JSX element, like div */}
       <form onSubmit={handleSubmit}>
         <Box
           width={"50%"}
@@ -76,11 +81,9 @@ const BlogDetails = () => {
             padding={3}
             color="gray"
           >
-            Update A Pots
+            Update A Post
           </Typography>
-          <InputLabel
-            sx={{ mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" }}
-          >
+          <InputLabel sx={{ mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" }}>
             Title
           </InputLabel>
           <TextField
@@ -91,9 +94,7 @@ const BlogDetails = () => {
             variant="outlined"
             required
           />
-          <InputLabel
-            sx={{ mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" }}
-          >
+          <InputLabel sx={{ mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" }}>
             Description
           </InputLabel>
           <TextField
@@ -104,9 +105,7 @@ const BlogDetails = () => {
             variant="outlined"
             required
           />
-          <InputLabel
-            sx={{ mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" }}
-          >
+          <InputLabel sx={{ mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" }}>
             Image URL
           </InputLabel>
           <TextField
@@ -117,12 +116,27 @@ const BlogDetails = () => {
             variant="outlined"
             required
           />
+          {/* Display Tags */}
+          <InputLabel sx={{ mb: 1, mt: 2, fontSize: "24px", fontWeight: "bold" }}>
+            Tags
+          </InputLabel>
+          <div>
+            {tags.map((tag, index) => (
+              <Chip
+                key={index}
+                label={tag}
+                color="primary"
+                variant="outlined"
+                style={{ marginRight: "4px", marginBottom: "4px" }}
+              />
+            ))}
+          </div>
           <Button type="submit" color="warning" variant="contained">
             UPDATE
           </Button>
         </Box>
       </form>
-    </v>
+    </div>
   );
 };
 

@@ -2,39 +2,46 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcrypt");
 //create user register user
 exports.registerController = async (req, res) => {
+  console.log( "request recived registercontroller");
   try {
     const { username, email, password } = req.body;
-    //validation
+
+    // Validation: Check if any required field is missing
     if (!username || !email || !password) {
+      
       return res.status(400).send({
         success: false,
-        message: "Please Fill all fields",
+        message: "Please fill in all required fields.",
       });
     }
-    //exisiting user
-    const exisitingUser = await userModel.findOne({ email });
-    if (exisitingUser) {
-      return res.status(401).send({
+
+    // Check if the user already exists
+    const existingUser = await userModel.findOne({ email });
+    if (existingUser) {
+      return res.status(400).send({
         success: false,
-        message: "user already exisits",
+        message: "User with this email already exists.",
       });
     }
+
+    // Hash the user's password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    //save new user
-    const user = new userModel({ username, email, password: hashedPassword });
-    await user.save();
+    // Create and save the new user
+    const newUser = new userModel({ username, email, password: hashedPassword });
+    await newUser.save();
+    console.log(" registration successfull");
+    
     return res.status(201).send({
       success: true,
-      message: "New User Created",
-      user,
+      message: "New user created successfully.",
+      user: newUser,
     });
   } catch (error) {
-    console.log(error);
+    console.error("Error in Register controller:", error);
     return res.status(500).send({
-      message: "Error In Register callback",
       success: false,
-      error,
+      message: "Internal server error",
     });
   }
 };
