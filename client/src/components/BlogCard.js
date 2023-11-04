@@ -43,13 +43,14 @@ export default function BlogCard({
   return (
     <Card
       sx={{
+        backgroundColor: "#eaeaea",
         width: "40%",
         margin: "auto",
         mt: 2,
         padding: 2,
-        boxShadow: "5px 5px 10px #ccc",
-        ":hover:": {
-          boxShadow: "10px 10px 20px #ccc",
+        boxShadow: "rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;",
+        "&:hover": {  
+          boxShadow: "0 2px 6px 0 #368cbf, 0 3px 10px 0 #368cbf",
         },
       }}
     >
